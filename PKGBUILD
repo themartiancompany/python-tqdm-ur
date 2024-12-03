@@ -6,6 +6,15 @@
 # Maintainer: Robin Candau <antiz@archlinux.org>
 
 _py="python"
+_pyver="$( \
+  "${_py}" \
+    -V | \
+    awk \
+      '{print $2}')"
+_pymajver="${_pyver%.*}"
+_pyminver="${_pymajver#*.}"
+_pynextver="${_pymajver%.*}.$(( \
+  ${_pyminver} + 1))"
 _pkg=tqdm
 pkgname="${_py}-${_pkg}"
 pkgver=4.67.1
@@ -19,32 +28,33 @@ license=(
   'MPL-2.0'
 )
 _http="https://github.com"
-_ns"${_pkg}"
+_ns="${_pkg}"
 url="${_http}/${_ns}/${_pkg}"
 depends=(
-  'python'
+  "${_py}>=${_pymajver}"
+  "${_py}<${_pynextver}"
 )
 optdepends=(
-  'python-requests: telegram'
+  "${_py}-requests: telegram"
 )
 makedepends=(
   'git'
-  'python-setuptools-scm'
-  'python-toml'
-  'python-build'
-  'python-installer'
-  'python-wheel'
+  "${_py}-setuptools-scm"
+  "${_py}-toml"
+  "${_py}-build"
+  "${_py}-installer"
+  "${_py}-wheel"
 )
 checkdepends=(
-  'python-pytest'
-  'python-pytest-asyncio'
-  'python-pytest-timeout'
-  'python-numpy'
-  'python-pandas'
-  'python-rich'
-  'python-dask'
+  "${_py}-dask"
+  "${_py}-keras"
+  "${_py}-numpy"
+  "${_py}-pandas"
+  "${_py}-pytest"
+  "${_py}-pytest-asyncio"
+  "${_py}-pytest-timeout"
+  "${_py}-rich"
   'tk'
-  'python-keras'
 )
 source=(
   "git+${url}.git#commit=v${pkgver}"
